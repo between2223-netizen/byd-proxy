@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>BYD Seal 05 — عربي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== VARIABLES ===== */
+:root {
+  --bg:#060D1A; --s1:#0D1B2E; --s2:#132035;
+  --blue:#0A84FF; --cyan:#00C8E0; --gold:#FFB700;
+  --green:#30D158; --red:#FF453A; --orange:#FF9F0A;
+  --text:#F5F5F7; --muted:rgba(255,255,255,.45);
+  --border:rgba(255,255,255,.08);
+  --PROXY:""   /* ← سيُعبأ تلقائياً */
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);
+     min-height:100vh;max-width:430px;margin:0 auto;direction:rtl;overflow-x:hidden}
+
+/* ===== SPLASH ===== */
+#splash{position:fixed;inset:0;z-index:999;background:var(–bg);
+display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
+.slogo{width:88px;height:88px;background:linear-gradient(135deg,#0A84FF,#00C8E0);
+border-radius:24px;display:flex;align-items:center;justify-content:center;
+font-size:36px;box-shadow:0 0 60px rgba(10,132,255,.5);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 40px rgba(10,132,255,.4)}50%{box-shadow:0 0 80px rgba(10,132,255,.8)}}
+.sbar{width:180px;height:3px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.sbar-fill{height:100%;width:0;background:linear-gradient(90deg,var(–blue),var(–cyan));
+border-radius:3px;transition:width .12s linear}
+
+/* ===== LOGIN ===== */
+#login{display:none;flex-direction:column;min-height:100vh;padding:50px 24px 30px}
+.llogo{width:68px;height:68px;background:linear-gradient(135deg,var(–blue),var(–cyan));
+border-radius:18px;display:flex;align-items:center;justify-content:center;
+font-size:28px;margin:0 auto 14px;box-shadow:0 8px 28px rgba(10,132,255,.35)}
+.ltitle{font-size:21px;font-weight:800;text-align:center}
+.lsub{font-size:12px;color:var(–muted);text-align:center;margin-top:4px;margin-bottom:30px}
+.igroup{margin-bottom:14px}
+.ilabel{font-size:12px;color:var(–muted);margin-bottom:7px;display:block}
+.ifield{width:100%;padding:13px 15px;background:var(–s1);border:1px solid var(–border);
+border-radius:13px;color:var(–text);font-size:14px;font-family:‘Cairo’,sans-serif;
+direction:ltr;text-align:right;outline:none;transition:border-color .2s}
+.ifield:focus{border-color:var(–blue)}
+.ifield::placeholder{color:var(–muted)}
+.iselect{width:100%;padding:13px 15px;background:var(–s1);border:1px solid var(–border);
+border-radius:13px;color:var(–text);font-size:14px;font-family:‘Cairo’,sans-serif;
+outline:none;appearance:none}
+.btn{width:100%;padding:14px;border:none;border-radius:13px;
+font-size:15px;font-weight:700;font-family:‘Cairo’,sans-serif;cursor:pointer;transition:opacity .2s,transform .1s}
+.btn:active{opacity:.85;transform:scale(.98)}
+.btn-p{background:linear-gradient(135deg,var(–blue),var(–cyan));color:#fff;
+box-shadow:0 8px 22px rgba(10,132,255,.35)}
+.btn-s{background:var(–s1);border:1px solid var(–border);color:var(–text);margin-top:10px}
+.err{background:rgba(255,69,58,.1);border:1px solid rgba(255,69,58,.3);border-radius:10px;
+padding:10px 14px;font-size:13px;color:var(–red);margin-top:10px;display:none}
+.or{text-align:center;color:var(–muted);font-size:12px;margin:14px 0;position:relative}
+.or::before,.or::after{content:’’;position:absolute;top:50%;width:37%;height:1px;background:var(–border)}
+.or::before{right:0}.or::after{left:0}
+.proxy-note{background:rgba(10,132,255,.08);border:1px solid rgba(10,132,255,.2);
+border-radius:10px;padding:10px 14px;font-size:11px;color:var(–muted);
+margin-top:16px;text-align:center;line-height:1.7}
+.proxy-note span{color:var(–cyan);font-size:10px;direction:ltr;display:block;word-break:break-all}
+
+/* ===== APP ===== */
+#app{display:none}
+.topbar{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;
+background:var(–bg);position:sticky;top:0;z-index:100;border-bottom:1px solid var(–border)}
+.tavatar{width:34px;height:34px;background:linear-gradient(135deg,var(–blue),var(–cyan));
+border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px}
+.tname{font-size:14px;font-weight:700}.tsub{font-size:10px;color:var(–muted)}
+.tdot{width:8px;height:8px;border-radius:50%;background:var(–green);
+box-shadow:0 0 8px var(–green);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+.tright{display:flex;gap:10px;align-items:center}
+
+/* ===== PAGES ===== */
+.page{display:none;padding-bottom:88px;animation:fu .28s ease}
+.page.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== CAR CARD ===== */
+.ccard{margin:14px;background:linear-gradient(145deg,#0D1B2E,#0f2040);
+border:1px solid rgba(10,132,255,.2);border-radius:20px;overflow:hidden;position:relative}
+.ccard::before{content:’’;position:absolute;top:-50px;right:-50px;width:180px;height:180px;
+background:radial-gradient(circle,rgba(0,200,224,.1),transparent 70%);
+border-radius:50%;pointer-events:none}
+.ctop{padding:16px 18px 0;display:flex;justify-content:space-between;align-items:flex-start}
+.cname{font-size:19px;font-weight:900}.cmodel{font-size:11px;color:var(–cyan);margin-top:2px}
+.cpill{background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.3);color:var(–green);
+font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px}
+.cimg{text-align:center;padding:8px 0;font-size:86px;line-height:1;
+filter:drop-shadow(0 8px 28px rgba(10,132,255,.3))}
+.cstats{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(–border)}
+.cst{padding:13px 10px;text-align:center;border-left:1px solid var(–border)}
+.cst:last-child{border-left:none}
+.csv{font-size:17px;font-weight:800}
+.csv.c{color:var(–cyan)}.csv.g{color:var(–gold)}.csv.gr{color:var(–green)}
+.csl{font-size:10px;color:var(–muted);margin-top:2px}
+
+/* ===== QUICK BTNS ===== */
+.sh{padding:14px 18px 8px;display:flex;justify-content:space-between;align-items:center}
+.st{font-size:15px;font-weight:800}
+.qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;padding:0 14px}
+.qb{background:var(–s1);border:1px solid var(–border);border-radius:15px;
+padding:13px 6px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.qb.on{border-color:var(–blue);background:rgba(10,132,255,.1)}
+.qb:active{transform:scale(.92)}
+.qi{font-size:23px;margin-bottom:5px}.ql{font-size:10px;color:var(–muted);font-weight:600}
+.qb.on .ql{color:var(–cyan)}
+
+/* ===== CARDS ROW ===== */
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 14px;margin-top:12px}
+.sc{background:var(–s1);border:1px solid var(–border);border-radius:16px;padding:15px;position:relative;overflow:hidden}
+.scv{font-size:24px;font-weight:900}.scv.c{color:var(–cyan)}.scv.g{color:var(–gold)}
+.scl{font-size:11px;color:var(–muted);margin-top:2px}
+.pbar{height:4px;background:rgba(255,255,255,.1);border-radius:4px;margin-top:9px;overflow:hidden}
+.pfill{height:100%;border-radius:4px;transition:width 1s ease}
+.pfill.c{background:linear-gradient(90deg,var(–blue),var(–cyan))}
+.pfill.g{background:linear-gradient(90deg,var(–orange),var(–gold))}
+
+/* ===== LIVE CARD ===== */
+.lc{margin:12px 14px;background:var(–s1);border:1px solid var(–border);border-radius:16px;padding:15px}
+.lt{font-size:14px;font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+.lr{display:flex;justify-content:space-between;align-items:center;
+padding:8px 0;border-bottom:1px solid var(–border)}
+.lr:last-child{border-bottom:none}
+.lk{font-size:12px;color:var(–muted)}.lv{font-size:13px;font-weight:700}
+.lv.gr{color:var(–green)}.lv.c{color:var(–cyan)}.lv.w{color:var(–orange)}
+
+/* ===== BOTTOM NAV ===== */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+width:100%;max-width:430px;background:rgba(6,13,26,.95);backdrop-filter:blur(20px);
+border-top:1px solid var(–border);display:grid;grid-template-columns:repeat(5,1fr);
+padding:8px 0 20px;z-index:100}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px}
+.ni .nicon{font-size:21px}.ni .nlabel{font-size:9px;color:var(–muted);font-weight:600}
+.ni.active .nlabel{color:var(–blue)}.ni.active .nicon{filter:drop-shadow(0 0 6px var(–blue))}
+
+/* ===== CONTROL PAGE ===== */
+.csec{padding:0 14px;margin-top:13px}
+.cstitle{font-size:12px;color:var(–muted);font-weight:700;margin-bottom:9px;
+text-transform:uppercase;letter-spacing:1px}
+.cgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.cb{background:var(–s1);border:1px solid var(–border);border-radius:17px;
+padding:17px 12px;cursor:pointer;transition:all .2s;text-align:center}
+.cb:active{transform:scale(.94)}
+.cb.on{background:rgba(10,132,255,.1);border-color:rgba(10,132,255,.4)}
+.cb.on .cbi{filter:drop-shadow(0 0 10px var(–blue))}
+.cbi{font-size:30px;margin-bottom:7px}.cbn{font-size:13px;font-weight:700}
+.cbs{font-size:11px;color:var(–muted);margin-top:2px}.cbs.on{color:var(–green)}
+.cb.danger.on{background:rgba(255,69,58,.1);border-color:rgba(255,69,58,.4)}
+
+/* ===== TEMP ===== */
+.tcard{margin:14px;background:var(–s1);border:1px solid var(–border);border-radius:17px;padding:18px}
+.tlabel{font-size:12px;color:var(–muted);text-align:center;margin-bottom:6px}
+.tdisp{text-align:center;font-size:54px;font-weight:900;color:var(–cyan);margin:8px 0;
+text-shadow:0 0 20px rgba(0,200,224,.4)}
+.tunit{font-size:22px;font-weight:400}
+.tctrls{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.tbtn{width:48px;height:48px;background:var(–s2);border:1px solid var(–border);border-radius:50%;
+font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+transition:all .15s}
+.tbtn:active{transform:scale(.88);background:var(–blue)}
+
+/* ===== MAP ===== */
+.mcard{margin:14px;background:var(–s1);border:1px solid var(–border);border-radius:17px;overflow:hidden}
+.mmap{height:195px;background:linear-gradient(135deg,#0D1B2E,#112040);
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+gap:9px;position:relative}
+.mgrid{position:absolute;inset:0;
+background-image:linear-gradient(rgba(10,132,255,.05)1px,transparent 1px),
+linear-gradient(90deg,rgba(10,132,255,.05)1px,transparent 1px);
+background-size:28px 28px}
+.mpin{font-size:38px;position:relative;z-index:1;animation:bounce 1s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.maddr{font-size:12px;color:var(–cyan);position:relative;z-index:1;text-align:center;padding:0 18px}
+.minfo{padding:12px 15px;display:flex;justify-content:space-between}
+.ms .mv{font-size:14px;font-weight:700}.ms .ml{font-size:10px;color:var(–muted)}
+
+/* ===== SERVICES ===== */
+.slist{padding:0 14px}
+.srow{display:flex;align-items:center;gap:13px;padding:13px 0;
+border-bottom:1px solid var(–border);cursor:pointer;transition:opacity .2s}
+.srow:active{opacity:.7}
+.sbox{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+font-size:21px;flex-shrink:0}
+.sinfo{flex:1}.sn{font-size:14px;font-weight:700}.sd{font-size:11px;color:var(–muted);margin-top:2px}
+.sarr{color:var(–muted);font-size:17px}
+.sbadge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+
+/* ===== PROFILE ===== */
+.phead{padding:22px 18px;text-align:center}
+.pavatar{width:76px;height:76px;background:linear-gradient(135deg,var(–blue),var(–cyan));
+border-radius:50%;margin:0 auto 11px;display:flex;align-items:center;justify-content:center;
+font-size:30px;box-shadow:0 8px 24px rgba(10,132,255,.35)}
+.pname{font-size:19px;font-weight:800}.pid{font-size:11px;color:var(–muted);margin-top:3px;direction:ltr}
+.pstats{display:grid;grid-template-columns:1fr 1fr 1fr;background:var(–s1);
+border:1px solid var(–border);border-radius:14px;margin:0 14px 14px;overflow:hidden}
+.pst{padding:14px 8px;text-align:center;border-left:1px solid var(–border)}
+.pst:last-child{border-left:none}
+.psv{font-size:17px;font-weight:800;color:var(–cyan)}.psl{font-size:10px;color:var(–muted);margin-top:2px}
+.mlist{margin:0 14px}
+.mitem{display:flex;align-items:center;gap:11px;padding:14px 0;border-bottom:1px solid var(–border);cursor:pointer}
+.mitem:last-child{border-bottom:none}
+.micon{width:35px;height:35px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px}
+.mname{flex:1;font-size:14px;font-weight:600}.marr{color:var(–muted)}
+
+/* ===== MODAL ===== */
+.mo{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);backdrop-filter:blur(5px);
+display:none;align-items:flex-end}
+.mo.show{display:flex}
+.ms2{background:var(–s1);border-radius:22px 22px 0 0;width:100%;padding:18px;
+border-top:1px solid var(–border);animation:su .28s ease}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mhandle{width:38px;height:4px;background:rgba(255,255,255,.2);border-radius:4px;margin:0 auto 18px}
+.mtitle{font-size:17px;font-weight:800;margin-bottom:14px;text-align:center}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(18px);
+background:rgba(28,28,28,.95);backdrop-filter:blur(10px);color:#fff;
+padding:11px 22px;border-radius:24px;font-size:13px;font-weight:600;
+border:1px solid rgba(255,255,255,.12);opacity:0;transition:all .28s;
+white-space:nowrap;z-index:998;max-width:80%}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== SPINNER ===== */
+.spin{width:18px;height:18px;border:2px solid rgba(255,255,255,.2);border-top-color:#fff;
+border-radius:50%;animation:sp .7s linear infinite;display:inline-block;
+margin-left:8px;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ===== UTILS ===== */
+.divider{height:1px;background:var(–border);margin:14px 0}
+</style>
+
+</head>
+<body>
+
+<!-- SPLASH -->
+
+<div id="splash">
+  <div class="slogo">🌊</div>
+  <div style="font-size:22px;font-weight:900">BYD Seal 05</div>
+  <div style="font-size:13px;color:var(--muted)">لوحة تحكم عربية متكاملة</div>
+  <div class="sbar"><div class="sbar-fill" id="sb"></div></div>
+</div>
+
+<!-- LOGIN -->
+
+<div id="login">
+  <div class="llogo">🌊</div>
+  <div class="ltitle">تسجيل الدخول</div>
+  <div class="lsub">BYD Ocean — حسابك الصيني أو الدولي</div>
+
+  <div class="igroup">
+    <label class="ilabel">المنطقة</label>
+    <select class="iselect" id="region">
+      <option value="overseas">دولي (خارج الصين)</option>
+      <option value="cn">صيني (CN)</option>
+    </select>
+  </div>
+  <div class="igroup">
+    <label class="ilabel">اسم المستخدم / رقم الهاتف / البريد</label>
+    <input class="ifield" id="un" type="text" placeholder="you@example.com أو +86..." dir="ltr">
+  </div>
+  <div class="igroup">
+    <label class="ilabel">كلمة المرور</label>
+    <input class="ifield" id="pw" type="password" placeholder="••••••••" dir="ltr">
+  </div>
+  <div class="igroup">
+    <label class="ilabel">PIN التحكم عن بُعد (اختياري)</label>
+    <input class="ifield" id="pin" type="password" placeholder="رقم سري للتحكم" dir="ltr">
+  </div>
+  <div class="igroup">
+    <label class="ilabel">رابط السيرفر (Proxy URL)</label>
+    <input class="ifield" id="proxy" type="text" placeholder="https://your-proxy.railway.app" dir="ltr">
+  </div>
+
+  <div class="err" id="lerr"></div>
+  <button class="btn btn-p" id="lbtn" onclick="doLogin()">تسجيل الدخول</button>
+  <div class="or">أو</div>
+  <button class="btn btn-s" onclick="demoMode()">🚗 وضع العرض التجريبي (بدون حساب)</button>
+
+  <div class="proxy-note">
+    الاتصال يمر عبر سيرفرك الخاص فقط<br>
+    بيانات دخولك لا تُخزَّن على أي سيرفر خارجي<br>
+    <span id="proxy-display">لم يُحدَّد السيرفر بعد</span>
+  </div>
+</div>
+
+<!-- APP -->
+
+<div id="app">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:9px">
+      <div class="tavatar">👤</div>
+      <div>
+        <div class="tname" id="tname">عبدالله</div>
+        <div class="tsub">Seal 05 DM-i</div>
+      </div>
+    </div>
+    <div class="tright">
+      <div class="tdot" id="dot"></div>
+      <div style="font-size:11px;color:var(--muted)" id="conn-label">متصل</div>
+    </div>
+  </div>
+
+  <!-- HOME -->
+
+  <div class="page active" id="p-home">
+    <div class="ccard">
+      <div class="ctop">
+        <div>
+          <div class="cname">海豹 05</div>
+          <div class="cmodel">BYD Seal 05 DM-i • أبيض ثلجي</div>
+        </div>
+        <div class="cpill" id="car-pill">● متصل</div>
+      </div>
+      <div class="cimg">🚗</div>
+      <div class="cstats">
+        <div class="cst"><div class="csv c" id="h-ev">-- كم</div><div class="csl">⚡ كهربائي</div></div>
+        <div class="cst"><div class="csv g" id="h-fuel">-- كم</div><div class="csl">⛽ بنزين</div></div>
+        <div class="cst"><div class="csv gr" id="h-eff">--</div><div class="csl">لتر/100كم</div></div>
+      </div>
+    </div>
+
+```
+<div class="sh"><div class="st">تحكم سريع</div><div style="font-size:11px;color:var(--muted)" id="last-up">--</div></div>
+<div class="qgrid">
+  <div class="qb" id="q-lock" onclick="cmd('lock')"><div class="qi">🔒</div><div class="ql" id="ql-lock">مقفل</div></div>
+  <div class="qb" id="q-ac"   onclick="cmd('ac')"  ><div class="qi">❄️</div><div class="ql" id="ql-ac">تكييف</div></div>
+  <div class="qb" id="q-horn" onclick="cmd('horn')"><div class="qi">📢</div><div class="ql">بوق</div></div>
+  <div class="qb" id="q-flash"onclick="cmd('flash')"><div class="qi">💡</div><div class="ql">أضواء</div></div>
+</div>
+
+<div class="crow">
+  <div class="sc">
+    <div style="font-size:20px;margin-bottom:6px">⚡</div>
+    <div class="scv c" id="batt">--%</div>
+    <div class="scl">شحن البطارية</div>
+    <div class="pbar"><div class="pfill c" id="batt-bar" style="width:0%"></div></div>
+  </div>
+  <div class="sc">
+    <div style="font-size:20px;margin-bottom:6px">⛽</div>
+    <div class="scv g" id="fuel">--%</div>
+    <div class="scl">مستوى الوقود</div>
+    <div class="pbar"><div class="pfill g" id="fuel-bar" style="width:0%"></div></div>
+  </div>
+</div>
+
+<div class="lc">
+  <div class="lt">📊 بيانات مباشرة</div>
+  <div class="lr"><div class="lk">السرعة</div><div class="lv c" id="ld-speed">-- كم/س</div></div>
+  <div class="lr"><div class="lk">العداد الكلي</div><div class="lv" id="ld-odo">-- كم</div></div>
+  <div class="lr"><div class="lk">الحرارة الخارجية</div><div class="lv w" id="ld-temp">--°</div></div>
+  <div class="lr"><div class="lk">وضع التشغيل</div><div class="lv c" id="ld-mode">--</div></div>
+  <div class="lr"><div class="lk">حالة الأبواب</div><div class="lv" id="ld-lock">--</div></div>
+  <div class="lr"><div class="lk">الشحن</div><div class="lv" id="ld-chg">--</div></div>
+</div>
+```
+
+  </div>
+
+  <!-- CONTROL -->
+
+  <div class="page" id="p-ctrl">
+    <div class="tcard">
+      <div class="tlabel">🌡️ درجة حرارة التكييف عن بُعد</div>
+      <div class="tdisp"><span id="tv">22</span><span class="tunit">°</span></div>
+      <div class="tctrls">
+        <button class="tbtn" onclick="dT(-1)">−</button>
+        <div style="flex:1;text-align:center">
+          <button class="btn btn-p" style="padding:11px;" onclick="cmd('climate_start')">تشغيل التكييف ❄️</button>
+          <button class="btn btn-s" style="margin-top:8px;padding:10px;" onclick="cmd('climate_stop')">إيقاف ✕</button>
+        </div>
+        <button class="tbtn" onclick="dT(1)">+</button>
+      </div>
+    </div>
+
+```
+<div class="csec">
+  <div class="cstitle">الأبواب والأقفال</div>
+  <div class="cgrid">
+    <div class="cb on" id="c-lock" onclick="cmd('lock')">
+      <div class="cbi" id="ci-lock">🔒</div><div class="cbn">الأبواب</div><div class="cbs on" id="cs-lock">مقفلة</div>
+    </div>
+    <div class="cb" id="c-flash" onclick="cmd('flash')">
+      <div class="cbi" id="ci-flash">💡</div><div class="cbn">الأضواء</div><div class="cbs" id="cs-flash">مطفأة</div>
+    </div>
+  </div>
+</div>
+
+<div class="csec" style="margin-top:13px">
+  <div class="cstitle">إشارات</div>
+  <div class="cgrid">
+    <div class="cb" onclick="cmd('horn')">
+      <div class="cbi">📢</div><div class="cbn">البوق</div><div class="cbs">اضغط</div>
+    </div>
+    <div class="cb danger" onclick="callSOS()">
+      <div class="cbi">🆘</div><div class="cbn">إنقاذ الطريق</div><div class="cbs">400-830-3666</div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- LOCATE -->
+
+  <div class="page" id="p-map">
+    <div class="mcard">
+      <div class="mmap">
+        <div class="mgrid"></div>
+        <div class="mpin">📍</div>
+        <div class="maddr" id="maddr">جاري تحديد الموقع...</div>
+      </div>
+      <div class="minfo">
+        <div class="ms"><div class="mv" id="glat">--</div><div class="ml">خط العرض</div></div>
+        <div class="ms"><div class="mv" id="glng">--</div><div class="ml">خط الطول</div></div>
+        <div class="ms"><div class="mv" id="gspd">-- كم/س</div><div class="ml">السرعة</div></div>
+      </div>
+    </div>
+    <div class="lc">
+      <div class="lt">🛰️ GPS</div>
+      <div class="lr"><div class="lk">الاتجاه</div><div class="lv c" id="gdir">--</div></div>
+      <div class="lr"><div class="lk">آخر تحديث</div><div class="lv" id="gts">--</div></div>
+    </div>
+    <div style="padding:0 14px">
+      <button class="btn btn-p" onclick="openMaps()">🗺️ فتح في خرائط جوجل</button>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+
+  <div class="page" id="p-svc">
+    <div class="sh"><div class="st">🔧 الخدمات</div></div>
+    <div class="slist">
+      <div class="srow" onclick="sm('book')">
+        <div class="sbox" style="background:rgba(10,132,255,.15)">📅</div>
+        <div class="sinfo"><div class="sn">حجز موعد صيانة</div><div class="sd">服务预约</div></div>
+        <div class="sarr">›</div>
+      </div>
+      <div class="srow" onclick="sm('sos')">
+        <div class="sbox" style="background:rgba(255,69,58,.15)">🚨</div>
+        <div class="sinfo"><div class="sn">إنقاذ الطريق</div><div class="sd">道路救援 — 24/7</div></div>
+        <span class="sbadge" style="background:rgba(255,69,58,.15);color:var(--red)">طارئ</span>
+      </div>
+      <div class="srow" onclick="refreshStatus()">
+        <div class="sbox" style="background:rgba(0,200,224,.15)">🔄</div>
+        <div class="sinfo"><div class="sn">تحديث البيانات</div><div class="sd">تحديث مباشر من السيارة</div></div>
+        <div class="sarr">›</div>
+      </div>
+      <div class="srow" onclick="sm('ota')">
+        <div class="sbox" style="background:rgba(48,209,88,.15)">📦</div>
+        <div class="sinfo"><div class="sn">تحديثات OTA</div><div class="sd">SW: 4.00.01</div></div>
+        <span class="sbadge" style="background:rgba(48,209,88,.15);color:var(--green)">محدّث</span>
+      </div>
+      <div class="srow" onclick="sm('info')">
+        <div class="sbox" style="background:rgba(255,183,0,.15)">📋</div>
+        <div class="sinfo"><div class="sn">معلومات السيارة</div><div class="sd">VIN: LC0C76C49S0661819</div></div>
+        <div class="sarr">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+
+  <div class="page" id="p-me">
+    <div class="phead">
+      <div class="pavatar">👤</div>
+      <div class="pname" id="pname">عبدالله</div>
+      <div class="pid">VIN: LC0C76C49S0661819</div>
+    </div>
+    <div class="pstats">
+      <div class="pst"><div class="psv" id="ps-odo">--</div><div class="psl">كم إجمالي</div></div>
+      <div class="pst"><div class="psv" id="ps-batt">--%</div><div class="psl">البطارية</div></div>
+      <div class="pst"><div class="psv">Dec 25</div><div class="psl">تاريخ الشراء</div></div>
+    </div>
+    <div class="mlist">
+      <div class="mitem" onclick="toast('🔗 فتح إعدادات السيرفر');showProxySettings()">
+        <div class="micon" style="background:rgba(10,132,255,.15)">⚙️</div>
+        <div class="mname">إعدادات السيرفر</div>
+        <div class="marr">›</div>
+      </div>
+      <div class="mitem" onclick="toast('📱 فتح CarPlay')">
+        <div class="micon" style="background:rgba(0,200,224,.15)">📱</div>
+        <div class="mname">إعداد CarPlay</div>
+        <div class="marr">›</div>
+      </div>
+      <div class="mitem" onclick="doLogout()">
+        <div class="micon" style="background:rgba(255,69,58,.15)">🚪</div>
+        <div class="mname" style="color:var(--red)">تسجيل الخروج</div>
+        <div class="marr">›</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+
+  <div class="bnav">
+    <div class="ni active" onclick="nav('home',this)"><div class="nicon">🏠</div><div class="nlabel">الرئيسية</div></div>
+    <div class="ni" onclick="nav('ctrl',this)"><div class="nicon">🎮</div><div class="nlabel">التحكم</div></div>
+    <div class="ni" onclick="nav('map',this);fetchGPS()"><div class="nicon">📍</div><div class="nlabel">الموقع</div></div>
+    <div class="ni" onclick="nav('svc',this)"><div class="nicon">🔧</div><div class="nlabel">الخدمات</div></div>
+    <div class="ni" onclick="nav('me',this)"><div class="nicon">👤</div><div class="nlabel">حسابي</div></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+
+<div class="toast" id="toastEl"></div>
+
+<!-- MODAL -->
+
+<div class="mo" id="modal" onclick="closeModal()">
+  <div class="ms2" onclick="event.stopPropagation()">
+    <div class="mhandle"></div>
+    <div class="mtitle" id="mtitle"></div>
+    <div id="mbody"></div>
+  </div>
+</div>
+
+<script>
+// ======================================================
+// STATE
+// ======================================================
+const S = {
+  demo: false,
+  session_id: null,
+  proxy: '',
+  username: '',
+  vin: null,
+  acTemp: 22,
+  carData: {},
+  controls: { lock:true, flash:false },
+  pollTimer: null,
+};
+
+// ======================================================
+// SPLASH
+// ======================================================
+let p = 0;
+const bar = document.getElementById('sb');
+const iv = setInterval(() => {
+  p += Math.random()*14+4;
+  if (p >= 100) { p=100; clearInterval(iv); }
+  bar.style.width = p + '%';
+  if (p >= 100) setTimeout(showLogin, 350);
+}, 160);
+
+function showLogin() {
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('login').style.display = 'flex';
+}
+
+// ======================================================
+// LOGIN
+// ======================================================
+async function doLogin() {
+  const un    = document.getElementById('un').value.trim();
+  const pw    = document.getElementById('pw').value.trim();
+  const pin   = document.getElementById('pin').value.trim();
+  const proxy = document.getElementById('proxy').value.trim().replace(/\/$/,'');
+  const region= document.getElementById('region').value;
+
+  if (!un || !pw)    return showErr('أدخل اسم المستخدم وكلمة المرور');
+  if (!proxy)        return showErr('أدخل رابط السيرفر (Proxy URL)');
+
+  S.proxy = proxy;
+  document.getElementById('proxy-display').textContent = proxy;
+
+  const btn = document.getElementById('lbtn');
+  btn.innerHTML = '<span class="spin"></span>جاري الاتصال...';
+  btn.disabled = true;
+  document.getElementById('lerr').style.display = 'none';
+
+  try {
+    const res = await api('/login', { username:un, password:pw, control_pin:pin, region });
+    if (res.success) {
+      S.session_id = res.session_id;
+      S.username   = un;
+      S.vin        = res.vehicles?.[0]?.vin || null;
+      enterApp();
+    } else {
+      showErr('❌ فشل تسجيل الدخول');
+    }
+  } catch(e) {
+    showErr('⚠️ تعذّر الاتصال بالسيرفر:\n' + e.message);
+  }
+  btn.innerHTML = 'تسجيل الدخول';
+  btn.disabled = false;
+}
+
+function showErr(m) {
+  const el = document.getElementById('lerr');
+  el.textContent = m; el.style.display = 'block';
+}
+
+// ======================================================
+// DEMO MODE
+// ======================================================
+function demoMode() {
+  S.demo = true; S.username = 'عبدالله';
+  S.carData = {
+    battery_pct:18, ev_range:43, fuel_pct:82, fuel_range:1744,
+    speed:0, odometer:12345, locked:true, charging:false,
+    ext_temp:40, lat:23.5880, lng:58.3829, heading:290
+  };
+  enterApp();
+  setInterval(() => {
+    S.carData.battery_pct = Math.max(5,Math.min(100, S.carData.battery_pct+(Math.random()-.5)*1.5));
+    S.carData.ext_temp    = 38+Math.floor(Math.random()*5);
+    renderData();
+  }, 12000);
+}
+
+// ======================================================
+// ENTER APP
+// ======================================================
+function enterApp() {
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display   = 'block';
+  document.getElementById('tname').textContent   = S.username;
+  document.getElementById('pname').textContent   = S.username;
+  if (!S.demo) {
+    refreshStatus();
+    S.pollTimer = setInterval(refreshStatus, 30000);
+  } else {
+    renderData();
+  }
+}
+
+// ======================================================
+// API CALL
+// ======================================================
+async function api(path, body={}) {
+  const r = await fetch(S.proxy + path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ session_id: S.session_id, vin: S.vin, ...body })
+  });
+  if (!r.ok) {
+    const e = await r.json().catch(()=>({}));
+    throw new Error(e.detail || r.statusText);
+  }
+  return r.json();
+}
+
+// ======================================================
+// REFRESH STATUS
+// ======================================================
+async function refreshStatus() {
+  if (S.demo) return;
+  try {
+    const d = await api('/car/status');
+    if (d.success) {
+      S.carData = d;
+      renderData();
+      document.getElementById('conn-label').textContent = 'متصل';
+      document.getElementById('dot').style.background   = 'var(--green)';
+    }
+  } catch(e) {
+    document.getElementById('conn-label').textContent = 'غير متصل';
+    document.getElementById('dot').style.background   = 'var(--red)';
+  }
+}
+
+// ======================================================
+// RENDER
+// ======================================================
+function renderData() {
+  const d = S.carData;
+  const na = v => v !== undefined && v !== null ? v : '--';
+
+  // Home
+  set('h-ev',   na(d.ev_range)   + ' كم');
+  set('h-fuel',  na(d.fuel_range) + ' كم');
+
+  // Battery
+  const bp = Math.round(d.battery_pct || 0);
+  const fp = Math.round(d.fuel_pct    || 0);
+  set('batt', bp + '%'); set('batt-bar', null, bp);
+  set('fuel', fp + '%'); set('fuel-bar', null, fp);
+
+  // Live
+  set('ld-speed', na(d.speed)    + ' كم/س');
+  set('ld-odo',   na(d.odometer) + ' كم');
+  set('ld-temp',  na(d.ext_temp) + '°');
+  set('ld-mode',  d.charging ? 'يشحن الآن ⚡' : 'HEV هجين');
+  set('ld-lock',  d.locked  ? '🔒 مقفلة' : '🔓 مفتوحة');
+  set('ld-chg',   d.charging ? '⚡ يشحن' : '— متوقف');
+
+  // Profile
+  set('ps-odo',  na(d.odometer));
+  set('ps-batt', bp + '%');
+
+  // GPS
+  if (d.lat) {
+    set('glat', d.lat.toFixed(5));
+    set('glng', d.lng.toFixed(5));
+    set('gspd', na(d.speed) + ' كم/س');
+    set('gdir', heading(d.heading || 0));
+    set('gts',  new Date().toLocaleTimeString('ar'));
+    set('maddr','مسقط، سلطنة عُمان 🇴🇲');
+  }
+
+  set('last-up', 'آخر تحديث: ' + new Date().toLocaleTimeString('ar'));
+}
+
+function set(id, val, width) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (width !== undefined && width !== null) el.style.width = width + '%';
+  else if (val !== null) el.textContent = val;
+}
+
+function heading(deg) {
+  const dirs = ['شمال','شمال شرق','شرق','جنوب شرق','جنوب','جنوب غرب','غرب','شمال غرب'];
+  return dirs[Math.round(deg/45)%8];
+}
+
+// ======================================================
+// COMMANDS
+// ======================================================
+async function cmd(type) {
+  if (S.demo) { demoCmd(type); return; }
+  toast('⏳ جاري التنفيذ...');
+  try {
+    let res;
+    const endpoints = {
+      lock:          '/car/lock',
+      unlock:        '/car/unlock',
+      horn:          '/car/horn',
+      flash:         '/car/flash',
+      climate_start: '/car/climate/start',
+      climate_stop:  '/car/climate/stop',
+    };
+    const ep = endpoints[type];
+    if (!ep) return;
+    const body = type === 'climate_start'
+      ? { temperature: S.acTemp, duration_minutes: 20 }
+      : {};
+    res = await api(ep, body);
+    toast(res.msg || (res.success ? '✅ تم' : '❌ فشل'));
+    if (type === 'lock' || type === 'unlock') {
+      S.carData.locked = (type === 'lock');
+      renderData();
+      updateLockUI(S.carData.locked);
+    }
+  } catch(e) {
+    toast('❌ ' + e.message);
+  }
+}
+
+function demoCmd(type) {
+  const msgs = {
+    lock:   () => { S.controls.lock=true;  updateLockUI(true);  return '🔒 تم القفل'; },
+    unlock: () => { S.controls.lock=false; updateLockUI(false); return '🔓 تم الفتح'; },
+    horn:          () => '📢 تم تشغيل البوق',
+    flash:         () => '💡 تم تشغيل الأضواء',
+    climate_start: () => `❄️ تكييف ${S.acTemp}° مفعّل`,
+    climate_stop:  () => '✅ تم إيقاف التكييف',
+    ac:            () => { S.controls.lock=!S.controls.lock; return S.controls.lock?'❄️ تكييف مفعّل':'✅ تكييف مطفأ'; },
+  };
+  // toggle lock/unlock based on state
+  if (type === 'lock') type = S.controls.lock ? 'unlock' : 'lock';
+  toast(msgs[type]?.() || '✅ تم');
+}
+
+function updateLockUI(locked) {
+  const qb = document.getElementById('q-lock');
+  const ql = document.getElementById('ql-lock');
+  const cb = document.getElementById('c-lock');
+  const cs = document.getElementById('cs-lock');
+  const ci = document.getElementById('ci-lock');
+  if (locked) {
+    qb?.classList.add('on'); cb?.classList.add('on');
+    if(ql) ql.textContent = 'مقفل';
+    if(cs) { cs.textContent='مقفلة'; cs.className='cbs on'; }
+    if(ci) ci.textContent = '🔒';
+  } else {
+    qb?.classList.remove('on'); cb?.classList.remove('on');
+    if(ql) ql.textContent = 'مفتوح';
+    if(cs) { cs.textContent='مفتوحة'; cs.className='cbs'; }
+    if(ci) ci.textContent = '🔓';
+  }
+}
+
+// ======================================================
+// TEMP
+// ======================================================
+function dT(d) {
+  S.acTemp = Math.max(16, Math.min(30, S.acTemp+d));
+  document.getElementById('tv').textContent = S.acTemp;
+}
+
+// ======================================================
+// GPS
+// ======================================================
+async function fetchGPS() {
+  if (S.demo) {
+    set('glat','23.58805'); set('glng','58.38291');
+    set('gspd','0 كم/س'); set('gdir','شمال غرب');
+    set('gts', new Date().toLocaleTimeString('ar'));
+    set('maddr','مسقط، سلطنة عُمان 🇴🇲');
+    return;
+  }
+  try {
+    const g = await api('/car/gps');
+    if (g.success) {
+      set('glat', g.lat.toFixed(5));
+      set('glng', g.lng.toFixed(5));
+      set('gspd', g.speed + ' كم/س');
+      set('gdir', heading(g.heading||0));
+      set('gts',  new Date().toLocaleTimeString('ar'));
+      set('maddr','مسقط، سلطنة عُمان 🇴🇲');
+      S.carData.lat = g.lat; S.carData.lng = g.lng;
+    }
+  } catch(e) {}
+}
+
+function openMaps() {
+  const lat = S.carData.lat || 23.588;
+  const lng = S.carData.lng || 58.382;
+  window.open(`https://maps.google.com/?q=${lat},${lng}`,'_blank');
+}
+
+// ======================================================
+// NAVIGATION
+// ======================================================
+function nav(id, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ======================================================
+// SERVICES MODAL
+// ======================================================
+function sm(type) {
+  const content = {
+    book: ['📅 حجز موعد صيانة',`
+      <div class="lc" style="margin:0 0 12px">
+        <div class="lr"><div class="lk">موديل السيارة</div><div class="lv">Seal 05 DM-i</div></div>
+        <div class="lr"><div class="lk">VIN</div><div class="lv c" style="font-size:11px;direction:ltr">LC0C76C49S0661819</div></div>
+        <div class="lr"><div class="lk">آخر صيانة</div><div class="lv">لم تُسجَّل بعد</div></div>
+      </div>
+      <button class="btn btn-p" onclick="toast('🔗 افتح تطبيق BYD Ocean وادخل 服务预约');closeModal()">فتح صفحة الحجز</button>
+    `],
+    sos: ['🆘 إنقاذ الطريق',`
+      <div style="text-align:center;font-size:52px;padding:16px">🆘</div>
+      <a href="tel:4008303666" class="btn" style="display:block;text-decoration:none;text-align:center;padding:14px;border-radius:13px;background:linear-gradient(135deg,var(--red),#ff6b6b);font-family:Cairo,sans-serif;font-weight:700;font-size:15px;color:#fff;margin-bottom:10px">
+        📞 اتصل الآن: 400-830-3666
+      </a>
+      <button class="btn btn-s" onclick="closeModal()">إلغاء</button>
+    `],
+    ota: ['🔄 تحديثات OTA',`
+      <div class="lc" style="margin:0 0 12px">
+        <div class="lr"><div class="lk">إصدار DiLink</div><div class="lv c">SW: 4.00.01</div></div>
+        <div class="lr"><div class="lk">إصدار ADAS</div><div class="lv c">HW: V0.6</div></div>
+        <div class="lr"><div class="lk">حالة التحديث</div><div class="lv gr">محدّث ✓</div></div>
+      </div>
+      <button class="btn btn-p" onclick="toast('✅ نظامك على أحدث إصدار');closeModal()">فحص التحديثات</button>
+    `],
+    info: ['📋 معلومات السيارة',`
+      <div class="lc" style="margin:0 0 12px">
+        <div class="lr"><div class="lk">الموديل</div><div class="lv">BYD Seal 05 DM-i</div></div>
+        <div class="lr"><div class="lk">رقم الهيكل</div><div class="lv c" style="font-size:11px;direction:ltr">LC0C76C49S0661819</div></div>
+        <div class="lr"><div class="lk">تاريخ الصنع</div><div class="lv">ديسمبر 2025</div></div>
+        <div class="lr"><div class="lk">اللون</div><div class="lv">أبيض ثلجي</div></div>
+        <div class="lr"><div class="lk">المحرك</div><div class="lv">BYD472QC + TZ210QYA</div></div>
+        <div class="lr"><div class="lk">البطارية</div><div class="lv">37.5 أمبير/ساعة Blade</div></div>
+        <div class="lr"><div class="lk">نظام القيادة</div><div class="lv c">DiPilot 100</div></div>
+      </div>
+      <button class="btn btn-s" onclick="closeModal()">إغلاق</button>
+    `],
+  };
+  if (content[type]) showModal(content[type][0], content[type][1]);
+}
+
+function callSOS() { sm('sos'); }
+
+function showProxySettings() {
+  showModal('⚙️ إعدادات السيرفر', `
+    <div class="lc" style="margin:0 0 12px">
+      <div class="lr"><div class="lk">السيرفر الحالي</div><div class="lv c" style="font-size:11px;direction:ltr;word-break:break-all">${S.proxy||'غير محدد'}</div></div>
+      <div class="lr"><div class="lk">الجلسة</div><div class="lv gr">${S.session_id?'نشطة ✓':'غير نشطة'}</div></div>
+    </div>
+    <div class="igroup">
+      <label class="ilabel">تغيير رابط السيرفر</label>
+      <input class="ifield" id="new-proxy" placeholder="https://..." dir="ltr" value="${S.proxy}">
+    </div>
+    <button class="btn btn-p" onclick="S.proxy=document.getElementById('new-proxy').value.trim().replace(/\\/$/,'');toast('✅ تم تحديث السيرفر');closeModal()">حفظ</button>
+  `);
+}
+
+// ======================================================
+// MODAL
+// ======================================================
+function showModal(t, b) {
+  document.getElementById('mtitle').textContent = t;
+  document.getElementById('mbody').innerHTML = b;
+  document.getElementById('modal').classList.add('show');
+}
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
+
+// ======================================================
+// TOAST
+// ======================================================
+let tt;
+function toast(m) {
+  const el = document.getElementById('toastEl');
+  el.textContent=m; el.classList.add('show');
+  clearTimeout(tt); tt=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+// ======================================================
+// LOGOUT
+// ======================================================
+async function doLogout() {
+  if (!S.demo && S.session_id) {
+    try { await api('/logout'); } catch(e) {}
+  }
+  clearInterval(S.pollTimer);
+  S.session_id=null; S.demo=false;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login').style.display='flex';
+  toast('تم تسجيل الخروج');
+}
+</script>
+
+</body>
+</html>
